@@ -1,21 +1,15 @@
 package net.miladinov.avltree;
 
 class Node<T extends Comparable<? super T>> implements Comparable<T> {
-    private Node<T> parent;
     private Node<T> right;
     private Node<T> left;
     private T data;
 
     public Node(T data) {
-        this(null, data);
+        this(data, null, null);
     }
 
-    public Node(Node<T> parent, T data) {
-        this(parent, data, null, null);
-    }
-
-    public Node(Node<T> parent, T data, Node<T> left, Node<T> right) {
-        this.parent = parent;
+    public Node(T data, Node<T> left, Node<T> right) {
         this.data = data;
         this.left = left;
         this.right = right;
@@ -27,10 +21,6 @@ class Node<T extends Comparable<? super T>> implements Comparable<T> {
 
     public Node<T> right() {
         return right;
-    }
-
-    public Node<T> parent() {
-        return parent;
     }
 
     public T data() {
