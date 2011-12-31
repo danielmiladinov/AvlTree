@@ -1,6 +1,6 @@
 package net.miladinov.avltree;
 
-class Node<T extends Comparable<? super T>> implements Comparable<T> {
+class Node<T extends Comparable<? super T>> {
     private Node<T> right;
     private Node<T> left;
     private T data;
@@ -25,10 +25,5 @@ class Node<T extends Comparable<? super T>> implements Comparable<T> {
 
     public T data() {
         return data;
-    }
-
-    @Override
-    public int compareTo(T o) {
-        return data.compareTo(o);
     }
 }
