@@ -208,11 +208,7 @@ public class AvlTree<T extends Comparable<? super T>> {
     private Iterable<? extends T> inorderTraversal() {
         return new TreeTraversal() {
             {
-                Node<T> current = root;
-                while (current != null) {
-                    nodeStack.push(current);
-                    current = current.left();
-                }
+                pushLeftMostNodesOf(root);
             }
 
             @Override
@@ -226,11 +222,7 @@ public class AvlTree<T extends Comparable<? super T>> {
                     @Override
                     public T next() {
                         Node<T> nextNode = nodeStack.pop();
-                        Node<T> current = nextNode.right();
-                        while (current != null) {
-                            nodeStack.push(current);
-                            current = current.left();
-                        }
+                        pushLeftMostNodesOf(nextNode.right());
                         return nextNode.data();
                     }
 
@@ -239,6 +231,13 @@ public class AvlTree<T extends Comparable<? super T>> {
                         throw new UnsupportedOperationException();
                     }
                 };
+            }
+
+            private void pushLeftMostNodesOf(Node<T> node) {
+                while (node != null) {
+                    nodeStack.push(node);
+                    node = node.left();
+                }
             }
         };
     }
