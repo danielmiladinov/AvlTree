@@ -80,4 +80,25 @@ public class AvlTreeTests {
         tree.add(4);
         assertFalse(tree.add(4));
     }
+
+    @Test
+    public void removingAValueFromTheTreeThatItDidNotContainReturnsFalse() {
+        assertFalse(tree.remove(6));
+    }
+
+    @Test
+    public void removingAValueFromTheTreeThatItContainedReturnsTrue() {
+        tree.add(3);
+        assertTrue(tree.remove(3));
+    }
+
+    @Test
+    public void theTreeNoLongerContainsTheValueThatWasRemovedFromIt() {
+        tree.add(10);
+        tree.add(4);
+        tree.add(1);
+        tree.add(2);
+        tree.remove(1);
+        assertFalse(tree.contains(1));
+    }
 }

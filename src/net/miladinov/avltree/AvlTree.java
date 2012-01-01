@@ -47,6 +47,81 @@ public class AvlTree<T extends Comparable<? super T>> {
         }
     }
 
+    public boolean remove(T data) {
+        return contains(data) && remove(data, root, null);
+    }
+
+    private boolean remove(T data, Node<T> current, Node<T> parent) {
+        switch (current.data().compareTo(data)) {
+            case 1:
+                Node<T> right = current.right();
+                return ((right != null) && (remove(data, right, current)));
+            case -1:
+                Node<T> left = current.left();
+                return ((left != null) && (remove(data, left, current)));
+            case 0:
+            default:
+                unlink(current, parent);
+                return true;
+        }
+    }
+
+    private void unlink(Node<T> current, Node<T> parent) {
+        if (current.isLeaf()) {
+            if (parent != null) {
+                if (parent.left() == current) {
+                    parent.setLeft(null);
+                } else if (parent.right() == current) {
+                    parent.setRight(null);
+                }
+            } else {
+                root = null;
+            }
+        } else {
+            Node<T> left = current.left();
+            Node<T> right = current.right();
+
+            if ((left == null || right == null)) {
+                if (right == null) {
+                    if (parent.left() == current) {
+                        parent.setLeft(left);
+                    } else if (parent.right() == current) {
+                        parent.setRight(left);
+                    } else {
+                        root = left;
+                    }
+                } else {
+                    if (parent.left() == current) {
+                        parent.setLeft(right);
+                    } else if (parent.right() == current) {
+                        parent.setRight(right);
+                    } else {
+                        root =right;
+                    }
+                }
+            } else {
+                Node<T> parentOfRightmostOfLeft = current;
+                Node<T> rightmostOfLeft = left;
+
+                while (parentOfRightmostOfLeft.right() != null) {
+                    rightmostOfLeft = parentOfRightmostOfLeft.right();
+                    parentOfRightmostOfLeft = rightmostOfLeft;
+                }
+
+                parentOfRightmostOfLeft.setRight(null);
+                rightmostOfLeft.setRight(current.right());
+
+                if (parent.left() == current) {
+                    parent.setLeft(rightmostOfLeft);
+                } else if (parent.right() == current) {
+                    parent.setRight(rightmostOfLeft);
+                } else {
+                    root = rightmostOfLeft;
+                }
+            }
+        }
+    }
+
     public boolean isEmpty() {
         return size == 0;
     }

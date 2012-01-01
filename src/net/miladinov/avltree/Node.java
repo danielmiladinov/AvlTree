@@ -34,4 +34,8 @@ class Node<T extends Comparable<? super T>> {
     public void setLeft(Node<T> left) {
         this.left = left;
     }
+
+    public boolean isLeaf() {
+        return ((left == null) && (right == null));
+    }
 }
