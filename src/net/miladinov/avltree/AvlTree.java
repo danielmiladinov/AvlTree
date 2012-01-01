@@ -21,16 +21,16 @@ public class AvlTree<T extends Comparable<? super T>> {
             size++;
             return true;
         } else {
-            return add(data, root, null);
+            return add(data, root);
         }
     }
 
-    private boolean add(T data, Node<T> current, Node<T> parent) {
+    private boolean add(T data, Node<T> current) {
         switch (current.data().compareTo(data)) {
             case 1:
                 Node<T> right = current.right();
                 if (right != null) {
-                    return add(data, right, current);
+                    return add(data, right);
                 } else {
                     current.setRight(new Node<T>(data));
                     size++;
@@ -39,7 +39,7 @@ public class AvlTree<T extends Comparable<? super T>> {
             case -1:
                 Node<T> left = current.left();
                 if (left != null) {
-                    return add(data, left, current);
+                    return add(data, left);
                 } else {
                     current.setLeft(new Node<T>(data));
                     size++;
