@@ -26,4 +26,12 @@ class Node<T extends Comparable<? super T>> {
     public T data() {
         return data;
     }
+
+    public void setRight(Node<T> right) {
+        this.right = right;
+    }
+
+    public void setLeft(Node<T> left) {
+        this.left = left;
+    }
 }
