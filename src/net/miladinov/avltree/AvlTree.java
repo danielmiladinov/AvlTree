@@ -1,5 +1,8 @@
 package net.miladinov.avltree;
 
+import net.miladinov.util.Stack;
+
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,76 +54,65 @@ public class AvlTree<T extends Comparable<? super T>> {
     }
 
     public boolean remove(T data) {
-        return contains(data) && remove(data, root, null);
+        return contains(data) && removeNodeContaining(data, root);
     }
 
-    private boolean remove(T data, Node<T> current, Node<T> parent) {
-        switch (current.data().compareTo(data)) {
+    private boolean removeNodeContaining(T data, Node<T> searchNode) {
+        switch (searchNode.data().compareTo(data)) {
             case 1:
-                Node<T> right = current.right();
-                return ((right != null) && (remove(data, right, current)));
+                return ((searchNode.right() != null) && (removeNodeContaining(data, searchNode.right())));
             case -1:
-                Node<T> left = current.left();
-                return ((left != null) && (remove(data, left, current)));
+                return ((searchNode.left() != null) && (removeNodeContaining(data, searchNode.left())));
             case 0:
             default:
-                unlink(current, parent);
+                removeNode(searchNode);
                 return true;
         }
     }
 
-    private void unlink(Node<T> current, Node<T> parent) {
+    private void removeNode(Node<T> current) {
+        Node<T> parent = current.parent();
+        Node<T> left = current.left();
+        Node<T> right = current.right();
+
         if (current.isLeaf()) {
-            if (parent != null) {
+            if (parent == null) {
+                root = null;
+            } else {
                 if (parent.left() == current) {
                     parent.setLeft(null);
                 } else if (parent.right() == current) {
                     parent.setRight(null);
                 }
+            }
+        } else if ((left == null || right == null)) {
+            if (right == null) {
+                if (parent == null) {
+                    root = left;
+                } else if (parent.left() == current) {
+                    parent.setLeft(left);
+                } else if (parent.right() == current) {
+                    parent.setRight(left);
+                }
             } else {
-                root = null;
+                if (parent == null) {
+                    root = right;
+                } else if (parent.left() == current) {
+                    parent.setLeft(right);
+                } else if (parent.right() == current) {
+                    parent.setRight(right);
+                }
             }
         } else {
-            Node<T> left = current.left();
-            Node<T> right = current.right();
+            left.rightMost().parent().setRight(null);
+            left.rightMost().setRight(current.right());
 
-            if ((left == null || right == null)) {
-                if (right == null) {
-                    if (parent.left() == current) {
-                        parent.setLeft(left);
-                    } else if (parent.right() == current) {
-                        parent.setRight(left);
-                    } else {
-                        root = left;
-                    }
-                } else {
-                    if (parent.left() == current) {
-                        parent.setLeft(right);
-                    } else if (parent.right() == current) {
-                        parent.setRight(right);
-                    } else {
-                        root =right;
-                    }
-                }
-            } else {
-                Node<T> parentOfRightmostOfLeft = current;
-                Node<T> rightmostOfLeft = left;
-
-                while (parentOfRightmostOfLeft.right() != null) {
-                    rightmostOfLeft = parentOfRightmostOfLeft.right();
-                    parentOfRightmostOfLeft = rightmostOfLeft;
-                }
-
-                parentOfRightmostOfLeft.setRight(null);
-                rightmostOfLeft.setRight(current.right());
-
-                if (parent.left() == current) {
-                    parent.setLeft(rightmostOfLeft);
-                } else if (parent.right() == current) {
-                    parent.setRight(rightmostOfLeft);
-                } else {
-                    root = rightmostOfLeft;
-                }
+            if (parent == null) {
+                root = left.rightMost();
+            } else if (parent.left() == current) {
+                parent.setLeft(left.rightMost());
+            } else if (parent.right() == current) {
+                parent.setRight(left.rightMost());
             }
         }
     }
@@ -155,15 +147,52 @@ public class AvlTree<T extends Comparable<? super T>> {
 
     public List<T> asPreorderList() {
         List<T> preorderList = new LinkedList<T>();
-        populatePreorder(preorderList, root);
+        for (T data : preorderTraversal()) {
+            preorderList.add(data);
+        }
         return preorderList;
     }
 
-    private void populatePreorder(List<T> preorderList, Node<T> current) {
-        if (current != null) {
-            preorderList.add(current.data());
-            populatePreorder(preorderList, current.right());
-            populatePreorder(preorderList, current.left());
+    abstract class TreeTraversal implements Iterable<T> {
+        protected Stack<Node<T>> nodeStack;
+
+        public TreeTraversal() {
+            nodeStack = new Stack<Node<T>>();
         }
+    }
+
+    private Iterable<? extends T> preorderTraversal() {
+        return new TreeTraversal() {
+            {
+                nodeStack.push(root);
+            }
+
+            @Override
+            public Iterator<T> iterator() {
+                return new Iterator<T>() {
+                    @Override
+                    public boolean hasNext() {
+                        return !nodeStack.isEmpty();
+                    }
+
+                    @Override
+                    public T next() {
+                        Node<T> nextNode = nodeStack.pop();
+
+                        Node<T> left = nextNode.left();
+                        if (left != null) nodeStack.push(left);
+                        Node<T> right = nextNode.right();
+                        if (right != null) nodeStack.push(right);
+
+                        return nextNode.data();
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
     }
 }
