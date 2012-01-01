@@ -31,20 +31,20 @@ public class AvlTree<T extends Comparable<? super T>> {
     private boolean add(T data, Node<T> current) {
         switch (current.data().compareTo(data)) {
             case 1:
-                Node<T> right = current.right();
-                if (right != null) {
-                    return add(data, right);
-                } else {
-                    current.setRight(new Node<T>(data));
-                    size++;
-                    return true;
-                }
-            case -1:
                 Node<T> left = current.left();
                 if (left != null) {
                     return add(data, left);
                 } else {
                     current.setLeft(new Node<T>(data));
+                    size++;
+                    return true;
+                }
+            case -1:
+                Node<T> right = current.right();
+                if (right != null) {
+                    return add(data, right);
+                } else {
+                    current.setRight(new Node<T>(data));
                     size++;
                     return true;
                 }
@@ -60,9 +60,9 @@ public class AvlTree<T extends Comparable<? super T>> {
     private boolean removeNodeContaining(T data, Node<T> searchNode) {
         switch (searchNode.data().compareTo(data)) {
             case 1:
-                return ((searchNode.right() != null) && (removeNodeContaining(data, searchNode.right())));
-            case -1:
                 return ((searchNode.left() != null) && (removeNodeContaining(data, searchNode.left())));
+            case -1:
+                return ((searchNode.right() != null) && (removeNodeContaining(data, searchNode.right())));
             case 0:
             default:
                 removeNode(searchNode);
@@ -131,10 +131,10 @@ public class AvlTree<T extends Comparable<? super T>> {
         while (current != null) {
             switch (current.data().compareTo(data)) {
                 case 1:
-                    current = current.right();
+                    current = current.left();
                     break;
                 case -1:
-                    current = current.left();
+                    current = current.right();
                     break;
                 case 0:
                 default:
@@ -151,6 +151,14 @@ public class AvlTree<T extends Comparable<? super T>> {
             preorderList.add(data);
         }
         return preorderList;
+    }
+
+    public List<T> asInorderList() {
+        List<T> inorderList = new LinkedList<T>();
+        for (T data : inorderTraversal()) {
+            inorderList.add(data);
+        }
+        return inorderList;
     }
 
     abstract class TreeTraversal implements Iterable<T> {
@@ -179,10 +187,11 @@ public class AvlTree<T extends Comparable<? super T>> {
                     public T next() {
                         Node<T> nextNode = nodeStack.pop();
 
-                        Node<T> left = nextNode.left();
-                        if (left != null) nodeStack.push(left);
+                        // Push in opposite order (right, left) to pop in correct order (left, right)
                         Node<T> right = nextNode.right();
                         if (right != null) nodeStack.push(right);
+                        Node<T> left = nextNode.left();
+                        if (left != null) nodeStack.push(left);
 
                         return nextNode.data();
                     }
@@ -195,4 +204,43 @@ public class AvlTree<T extends Comparable<? super T>> {
             }
         };
     }
+
+    private Iterable<? extends T> inorderTraversal() {
+        return new TreeTraversal() {
+            {
+                Node<T> current = root;
+                while (current != null) {
+                    nodeStack.push(current);
+                    current = current.left();
+                }
+            }
+
+            @Override
+            public Iterator<T> iterator() {
+                return new Iterator<T>() {
+                    @Override
+                    public boolean hasNext() {
+                        return !nodeStack.isEmpty();
+                    }
+
+                    @Override
+                    public T next() {
+                        Node<T> nextNode = nodeStack.pop();
+                        Node<T> current = nextNode.right();
+                        while (current != null) {
+                            nodeStack.push(current);
+                            current = current.left();
+                        }
+                        return nextNode.data();
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
+    }
+
 }
