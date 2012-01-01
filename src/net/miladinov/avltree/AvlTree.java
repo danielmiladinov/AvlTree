@@ -1,5 +1,8 @@
 package net.miladinov.avltree;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class AvlTree<T extends Comparable<? super T>> {
     private Node<T> root;
     private int size = 0;
@@ -148,5 +151,19 @@ public class AvlTree<T extends Comparable<? super T>> {
         }
 
         return false;
+    }
+
+    public List<T> asPreorderList() {
+        List<T> preorderList = new LinkedList<T>();
+        populatePreorder(preorderList, root);
+        return preorderList;
+    }
+
+    private void populatePreorder(List<T> preorderList, Node<T> current) {
+        if (current != null) {
+            preorderList.add(current.data());
+            populatePreorder(preorderList, current.right());
+            populatePreorder(preorderList, current.left());
+        }
     }
 }

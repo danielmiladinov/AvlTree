@@ -1,5 +1,9 @@
 import net.miladinov.avltree.AvlTree;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Arrays;
+
 import static junit.framework.Assert.*;
 
 public class AvlTreeTests {
@@ -100,5 +104,30 @@ public class AvlTreeTests {
         tree.add(2);
         tree.remove(1);
         assertFalse(tree.contains(1));
+    }
+
+    @Test
+    public void thePreorderTraversalListShouldRevealTreeStructure() {
+        tree.add(7);
+        tree.add(4);
+        tree.add(10);
+
+        assertEquals(Arrays.asList(7, 4, 10), tree.asPreorderList());
+    }
+
+    @Test
+    public void biggerTreesShouldBeJustAsEasyToTraverse() {
+        tree.add(7);
+        tree.add(4);
+        tree.add(10);
+        tree.add(9);
+        tree.add(1);
+        tree.add(2);
+        tree.add(3);
+        tree.add(5);
+        tree.add(6);
+        tree.add(8);
+
+        assertEquals(Arrays.asList(7, 4, 1, 2, 3, 5, 6, 10, 9, 8), tree.asPreorderList());
     }
 }
