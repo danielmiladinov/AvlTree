@@ -1,11 +1,7 @@
-import net.miladinov.avltree.*;
+import net.miladinov.avltree.AvlTree;
 import org.junit.*;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
 import static junit.framework.Assert.*;
 
-@RunWith(Parameterized.class)
 public class AvlTreeTests {
     private AvlTree<Integer> tree;
 
@@ -31,6 +27,13 @@ public class AvlTreeTests {
     }
 
     @Test
+    public void afterAddingASecondElementTheTreeShouldHaveASizeOfTwo() {
+        tree.add(5);
+        tree.add(7);
+        assertEquals(2, tree.size());
+    }
+
+    @Test
     public void afterAddingAnElementTheTreeShouldNoLongerBeEmpty() {
         tree.add(7);
         assertFalse(tree.isEmpty());
@@ -44,6 +47,20 @@ public class AvlTreeTests {
     @Test
     public void afterAddingAnElementTheTreeShouldContainThatElement() {
         tree.add(4);
+        assertTrue(tree.contains(4));
+    }
+
+    @Test
+    public void afterAddingASecondElementTheTreeShouldContainThatElementAlso() {
+        tree.add(4);
+        tree.add(7);
+        assertTrue(tree.contains(7));
+    }
+
+    @Test
+    public void afterAddingASecondElementTheTreeShouldStillContainTheFirstElement() {
+        tree.add(4);
+        tree.add(7);
         assertTrue(tree.contains(4));
     }
 }
