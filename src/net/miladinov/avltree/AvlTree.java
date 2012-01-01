@@ -16,7 +16,7 @@ public class AvlTree<T extends Comparable<? super T>> {
         if (isEmpty()) {
             root = new Node<T>(data);
             size++;
-            return false;
+            return true;
         } else {
             return add(data, root, null);
         }

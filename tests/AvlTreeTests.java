@@ -63,4 +63,21 @@ public class AvlTreeTests {
         tree.add(7);
         assertTrue(tree.contains(4));
     }
+
+    @Test
+    public void addReturnsTrueWhenItChangesTheStructureOfTheTreeWhenItWasEmpty() {
+        assertTrue(tree.add(4));
+    }
+
+    @Test
+    public void addReturnsTrueWhenItChangesTheStructureOfTheTreeWhenItWasNotEmpty() {
+        tree.add(4);
+        assertTrue(tree.add(8));
+    }
+
+    @Test
+    public void addReturnsFalseWhenItDoesNotChangeTheStructureOfTheTreeWhenItWasNotEmpty() {
+        tree.add(4);
+        assertFalse(tree.add(4));
+    }
 }
