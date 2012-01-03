@@ -13,6 +13,10 @@ public class Stack<T> {
         return storage.removeFirst();
     }
 
+    public T peek() {
+        return storage.getFirst();
+    }
+
     public boolean isEmpty() {
         return storage.isEmpty();
     }

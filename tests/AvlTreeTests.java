@@ -146,4 +146,19 @@ public class AvlTreeTests {
 
         assertEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), tree.asInorderList());
     }
+
+    @Test
+    public void treeValuesShouldBeInTheExpectedOrderWhenReturnedAsPostorderList() {
+        tree.add(50);
+        tree.add(25);
+        tree.add(75);
+        tree.add(10);
+        tree.add(30);
+        tree.add(27);
+        tree.add(45);
+        tree.add(90);
+        tree.add(80);
+
+        assertEquals(Arrays.asList(10, 27, 45, 30, 25, 80, 90, 75, 50), tree.asPostorderList());
+    }
 }

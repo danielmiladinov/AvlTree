@@ -2,9 +2,7 @@ package net.miladinov.avltree;
 
 import net.miladinov.util.Stack;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class AvlTree<T extends Comparable<? super T>> {
     private Node<T> root;
@@ -161,11 +159,26 @@ public class AvlTree<T extends Comparable<? super T>> {
         return inorderList;
     }
 
+    public List<T> asPostorderList() {
+        List<T> postorderList = new LinkedList<T>();
+        for (T data : postorderTraversal()) {
+            postorderList.add(data);
+        }
+        return postorderList;
+    }
+
     abstract class TreeTraversal implements Iterable<T> {
         protected Stack<Node<T>> nodeStack;
 
         public TreeTraversal() {
             nodeStack = new Stack<Node<T>>();
+        }
+
+        protected void pushLeftMostNodesOf(Node<T> node) {
+            while (node != null) {
+                nodeStack.push(node);
+                node = node.left();
+            }
         }
     }
 
@@ -233,11 +246,73 @@ public class AvlTree<T extends Comparable<? super T>> {
                 };
             }
 
-            private void pushLeftMostNodesOf(Node<T> node) {
-                while (node != null) {
-                    nodeStack.push(node);
-                    node = node.left();
-                }
+        };
+    }
+
+    private Iterable<? extends T> postorderTraversal() {
+        return new TreeTraversal() {
+            Set<Node<T>> iteratedNodes;
+
+            {
+                nodeStack.push(root);
+                iteratedNodes = new HashSet<Node<T>>();
+            }
+
+            @Override
+            public Iterator<T> iterator() {
+                return new Iterator<T>() {
+                    @Override
+                    public boolean hasNext() {
+                        return !nodeStack.isEmpty();
+                    }
+
+                    @Override
+                    public T next() {
+                        Node<T> next = null;
+                        Node<T> current = nodeStack.peek();
+
+                        while (next == null) {
+                            Node<T> left = current.left();
+                            Node<T> right = current.right();
+
+                            if (current.isLeaf()) {
+                                next = popNextNode();
+                            } else {
+                                boolean needToBacktrack = true;
+                                if (shouldPush(right)) {
+                                    nodeStack.push(right);
+                                    current = right;
+                                    needToBacktrack = false;
+                                }
+                                if (shouldPush(left)) {
+                                    nodeStack.push(left);
+                                    current = left;
+                                    needToBacktrack = false;
+                                }
+                                if (needToBacktrack) {
+                                    next = popNextNode();
+                                }
+                            }
+                        }
+
+                        return next.data();
+                    }
+
+                    private boolean shouldPush(Node<T> node) {
+                        return !(node == null || iteratedNodes.contains(node));
+                    }
+
+                    private Node<T> popNextNode() {
+                        Node<T> next = nodeStack.pop();
+                        iteratedNodes.add(next);
+                        return next;
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
             }
         };
     }
