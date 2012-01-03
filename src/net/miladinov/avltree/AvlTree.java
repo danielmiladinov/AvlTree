@@ -173,13 +173,6 @@ public class AvlTree<T extends Comparable<? super T>> {
         public TreeTraversal() {
             nodeStack = new Stack<Node<T>>();
         }
-
-        protected void pushLeftMostNodesOf(Node<T> node) {
-            while (node != null) {
-                nodeStack.push(node);
-                node = node.left();
-            }
-        }
     }
 
     private Iterable<? extends T> preorderTraversal() {
@@ -246,6 +239,12 @@ public class AvlTree<T extends Comparable<? super T>> {
                 };
             }
 
+            private void pushLeftMostNodesOf(Node<T> node) {
+                while (node != null) {
+                    nodeStack.push(node);
+                    node = node.left();
+                }
+            }
         };
     }
 
