@@ -22,7 +22,9 @@ public class AvlTree<T extends Comparable<? super T>> {
             size++;
             return true;
         } else {
-            return add(data, root);
+            boolean addition = add(data, root);
+            balance(root);
+            return addition;
         }
     }
 
@@ -48,6 +50,75 @@ public class AvlTree<T extends Comparable<? super T>> {
                 }
             default:
                 return false;
+        }
+    }
+
+    private void balance(Node<T> node) {
+        if (node == null) {
+            return;
+        }
+
+        balance(node.left());
+        balance(node.right());
+
+        int leftHeight = node.leftHeight();
+        int rightHeight = node.rightHeight();
+
+        boolean needsBalancing = Math.abs(leftHeight - rightHeight) > 1;
+
+        if (needsBalancing) {
+            if (rightHeight > leftHeight) {
+                rotateLeft(node);
+            } else if (leftHeight > rightHeight) {
+                rotateRight(node);
+            }
+        }
+    }
+
+    private void rotateLeft(Node<T> oldNode) {
+        Node<T> newNode, parent = oldNode.parent();
+
+        if (oldNode.right().right() != null) {
+            newNode = oldNode.right();
+            oldNode.setRight(null);
+            if (newNode.left() != null) {
+                oldNode.setRight(newNode.left());
+            }
+            newNode.setLeft(oldNode);
+        } else {
+            newNode = oldNode.right().left();
+            newNode.setRight(oldNode.right());
+            newNode.setLeft(oldNode);
+        }
+
+        setNewChildNodeOf(parent, oldNode, newNode);
+    }
+
+    private void rotateRight(Node<T> oldNode) {
+        Node<T> newNode, parent = oldNode.parent();
+
+        if (oldNode.left().left() != null) {
+            newNode = oldNode.left();
+            newNode.setLeft(null);
+            if (newNode.right() != null) {
+                oldNode.setLeft(newNode.right());
+            }
+            newNode.setRight(oldNode);
+        } else {
+            newNode = oldNode.left().right();
+            newNode.setLeft(oldNode.left());
+            newNode.setRight(oldNode);
+        }
+
+        setNewChildNodeOf(parent, oldNode, newNode);
+    }
+
+    private void setNewChildNodeOf(Node<T> parent, Node<T> oldChild, Node<T> newChild) {
+        if (parent == null) {
+            newChild.setParent(null);
+            root = newChild;
+        } else {
+            parent.replace(oldChild).with(newChild);
         }
     }
 
@@ -117,6 +188,10 @@ public class AvlTree<T extends Comparable<? super T>> {
 
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    Node<T> root() {
+        return root;
     }
 
     public boolean contains(T data) {
@@ -240,7 +315,7 @@ public class AvlTree<T extends Comparable<? super T>> {
             }
 
             private void pushLeftMostNodesOf(Node<T> node) {
-                while (node != null) {
+                while (node != null && !nodeStack.contains(node)) {
                     nodeStack.push(node);
                     node = node.left();
                 }
@@ -250,11 +325,11 @@ public class AvlTree<T extends Comparable<? super T>> {
 
     private Iterable<? extends T> postorderTraversal() {
         return new TreeTraversal() {
-            Set<Node<T>> iteratedNodes;
+            Map<T, Node<T>> iteratedNodes;
 
             {
                 nodeStack.push(root);
-                iteratedNodes = new HashSet<Node<T>>();
+                iteratedNodes = new HashMap<T, Node<T>>();
             }
 
             @Override
@@ -298,12 +373,12 @@ public class AvlTree<T extends Comparable<? super T>> {
                     }
 
                     private boolean shouldPush(Node<T> node) {
-                        return !(node == null || iteratedNodes.contains(node));
+                        return !(node == null || nodeStack.contains(node) || iteratedNodes.containsKey(node.data()));
                     }
 
                     private Node<T> popNextNode() {
                         Node<T> next = nodeStack.pop();
-                        iteratedNodes.add(next);
+                        iteratedNodes.put(next.data(), next);
                         return next;
                     }
 
@@ -315,5 +390,4 @@ public class AvlTree<T extends Comparable<? super T>> {
             }
         };
     }
-
 }

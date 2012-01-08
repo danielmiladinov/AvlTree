@@ -21,6 +21,10 @@ public class Stack<T> {
         return storage.isEmpty();
     }
 
+    public boolean contains(T item) {
+        return storage.contains(item);
+    }
+
     @Override
     public String toString() {
         return storage.toString();
