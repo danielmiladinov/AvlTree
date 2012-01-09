@@ -3,7 +3,7 @@ import net.miladinov.avltree.TreePrinter;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class TreePrinterTests {
     private AvlTree<Integer> tree;
@@ -57,6 +57,18 @@ public class TreePrinterTests {
 
         for (int i = 1; i < 31; i++) {
             tree.add(i);
+            System.out.println();
+            System.out.println(String.format("Printing after adding %s", i));
+            System.out.println(TreePrinter.print(tree));
+        }
+    }
+
+    @Test
+    public void moreJunk() {
+        for (int i = 100; i > 0; i--) {
+            tree.add(i);
+            System.out.println();
+            System.out.println(String.format("Printing after adding %s", i));
             System.out.println(TreePrinter.print(tree));
         }
     }

@@ -87,7 +87,9 @@ public class AvlTree<T extends Comparable<? super T>> {
             newNode.setLeft(oldNode);
         } else {
             newNode = oldNode.right().left();
+            oldNode.right().setLeft(null);
             newNode.setRight(oldNode.right());
+            oldNode.setRight(null);
             newNode.setLeft(oldNode);
         }
 
@@ -99,14 +101,16 @@ public class AvlTree<T extends Comparable<? super T>> {
 
         if (oldNode.left().left() != null) {
             newNode = oldNode.left();
-            newNode.setLeft(null);
+            oldNode.setLeft(null);
             if (newNode.right() != null) {
                 oldNode.setLeft(newNode.right());
             }
             newNode.setRight(oldNode);
         } else {
             newNode = oldNode.left().right();
+            oldNode.left().setRight(null);
             newNode.setLeft(oldNode.left());
+            oldNode.setLeft(null);
             newNode.setRight(oldNode);
         }
 

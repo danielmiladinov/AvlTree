@@ -128,7 +128,7 @@ public class AvlTreeTests {
         tree.add(6);
         tree.add(8);
 
-        assertEquals(Arrays.asList(7, 4, 1, 2, 3, 5, 6, 10, 9, 8), tree.asPreorderList());
+        assertEquals(Arrays.asList(7, 4, 2, 1, 3, 5, 6, 9, 8, 10), tree.asPreorderList());
     }
 
     @Test
@@ -159,6 +159,6 @@ public class AvlTreeTests {
         tree.add(90);
         tree.add(80);
 
-        assertEquals(Arrays.asList(10, 27, 45, 30, 25, 80, 90, 75, 50), tree.asPostorderList());
+        assertEquals(Arrays.asList(10, 27, 45, 30, 25, 75, 90, 80, 50), tree.asPostorderList());
     }
 }
