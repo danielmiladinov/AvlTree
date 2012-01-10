@@ -79,17 +79,14 @@ public class AvlTree<T extends Comparable<? super T>> {
         Node<T> newNode, parent = oldNode.parent();
 
         if (oldNode.right().right() != null) {
-            newNode = oldNode.right();
-            oldNode.setRight(null);
+            newNode = detachRightChildFrom(oldNode);
             if (newNode.left() != null) {
                 oldNode.setRight(newNode.left());
             }
             newNode.setLeft(oldNode);
         } else {
-            newNode = oldNode.right().left();
-            oldNode.right().setLeft(null);
-            newNode.setRight(oldNode.right());
-            oldNode.setRight(null);
+            newNode = detachLeftChildFrom(oldNode.right());
+            newNode.setRight(detachRightChildFrom(oldNode));
             newNode.setLeft(oldNode);
         }
 
@@ -100,21 +97,30 @@ public class AvlTree<T extends Comparable<? super T>> {
         Node<T> newNode, parent = oldNode.parent();
 
         if (oldNode.left().left() != null) {
-            newNode = oldNode.left();
-            oldNode.setLeft(null);
+            newNode = detachLeftChildFrom(oldNode);
             if (newNode.right() != null) {
                 oldNode.setLeft(newNode.right());
             }
             newNode.setRight(oldNode);
         } else {
-            newNode = oldNode.left().right();
-            oldNode.left().setRight(null);
-            newNode.setLeft(oldNode.left());
-            oldNode.setLeft(null);
+            newNode = detachRightChildFrom(oldNode.left());
+            newNode.setLeft(detachLeftChildFrom(oldNode));
             newNode.setRight(oldNode);
         }
 
         setNewChildNodeOf(parent, oldNode, newNode);
+    }
+
+    private Node<T> detachLeftChildFrom(Node<T> node) {
+        Node<T> leftChild = node.left();
+        node.setLeft(null);
+        return leftChild;
+    }
+
+    private Node<T> detachRightChildFrom(Node<T> node) {
+        Node<T> rightChild = node.right();
+        node.setRight(null);
+        return rightChild;
     }
 
     private void setNewChildNodeOf(Node<T> parent, Node<T> oldChild, Node<T> newChild) {
