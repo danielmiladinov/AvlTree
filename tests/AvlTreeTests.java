@@ -97,6 +97,13 @@ public class AvlTreeTests {
     }
 
     @Test
+    public void removingAValueFromTheTreeDecrementsItsSize() {
+        tree.add(4);
+        tree.remove(4);
+        assertEquals(0, tree.size());
+    }
+
+    @Test
     public void theTreeNoLongerContainsTheValueThatWasRemovedFromIt() {
         tree.add(10);
         tree.add(4);

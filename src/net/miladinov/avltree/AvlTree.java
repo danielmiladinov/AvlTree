@@ -133,7 +133,9 @@ public class AvlTree<T extends Comparable<? super T>> {
     }
 
     public boolean remove(T data) {
-        return contains(data) && removeNodeContaining(data, root);
+        final boolean removal = contains(data) && removeNodeContaining(data, root);
+        balance(root);
+        return removal;
     }
 
     private boolean removeNodeContaining(T data, Node<T> searchNode) {
@@ -158,28 +160,20 @@ public class AvlTree<T extends Comparable<? super T>> {
             if (parent == null) {
                 root = null;
             } else {
-                if (parent.left() == current) {
-                    parent.setLeft(null);
-                } else if (parent.right() == current) {
-                    parent.setRight(null);
-                }
+                parent.replace(current).with(null);
             }
         } else if ((left == null || right == null)) {
             if (right == null) {
                 if (parent == null) {
                     root = left;
-                } else if (parent.left() == current) {
-                    parent.setLeft(left);
-                } else if (parent.right() == current) {
-                    parent.setRight(left);
+                } else {
+                    parent.replace(current).with(left);
                 }
             } else {
                 if (parent == null) {
                     root = right;
-                } else if (parent.left() == current) {
-                    parent.setLeft(right);
-                } else if (parent.right() == current) {
-                    parent.setRight(right);
+                } else {
+                    parent.replace(current).with(right);
                 }
             }
         } else {
@@ -194,6 +188,7 @@ public class AvlTree<T extends Comparable<? super T>> {
                 parent.setRight(left.rightMost());
             }
         }
+        size--;
     }
 
     public boolean isEmpty() {
