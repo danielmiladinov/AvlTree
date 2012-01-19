@@ -247,6 +247,14 @@ public class AvlTree<T extends Comparable<? super T>> {
         return postorderList;
     }
 
+    public List<T> asLevelOrderList() {
+        List<T> levelOrderList = new LinkedList<T>();
+        for (T data : levelOrderTraversal()) {
+            levelOrderList.add(data);
+        }
+        return levelOrderList;
+    }
+
     abstract class TreeTraversal implements Iterable<T> {
         protected Stack<Node<T>> nodeStack;
 
@@ -395,4 +403,47 @@ public class AvlTree<T extends Comparable<? super T>> {
             }
         };
     }
+
+    private Iterable<? extends T> levelOrderTraversal() {
+        return new TreeTraversal() {
+            protected Queue<Node<T>> nodeQueue = new LinkedList<Node<T>>();
+
+            @Override
+            public Iterator<T> iterator() {
+                return new Iterator<T>() {
+                    {
+                        if (root != null) {
+                            nodeQueue.offer(root);
+                        }
+                    }
+
+                    @Override
+                    public boolean hasNext() {
+                        return !nodeQueue.isEmpty();
+                    }
+
+                    @Override
+                    public T next() {
+                        Node<T> nextNode = nodeQueue.poll();
+
+                        if (nextNode.left() != null) {
+                            nodeQueue.offer(nextNode.left());
+                        }
+
+                        if (nextNode.right() != null) {
+                            nodeQueue.offer(nextNode.right());
+                        }
+
+                        return nextNode.data();
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
+    }
+
 }

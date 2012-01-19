@@ -70,4 +70,20 @@ public class TraversalTests {
 
         assertEquals(Arrays.asList(10, 27, 45, 30, 25, 75, 90, 80, 50), tree.asPostorderList());
     }
+
+    @Test
+    public void treeValuesShouldBeInTheExpectedOrderWhenReturnedAsLevelOrderList() {
+        tree.add(10);
+        tree.add(9);
+        tree.add(8);
+        tree.add(7);
+        tree.add(6);
+        tree.add(5);
+        tree.add(4);
+        tree.add(3);
+        tree.add(2);
+        tree.add(1);
+
+        assertEquals(Arrays.asList(7, 3, 9, 2, 5, 8, 10, 1, 4, 6), tree.asLevelOrderList());
+    }
 }
