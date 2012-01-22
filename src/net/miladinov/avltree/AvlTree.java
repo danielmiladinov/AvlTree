@@ -261,12 +261,32 @@ public class AvlTree<T extends Comparable<? super T>> {
         public TreeTraversal() {
             nodeStack = new Stack<Node<T>>();
         }
+        
+        public void pushOntoStack(Node<T> node) {
+            if (node != null) {
+                nodeStack.push(node);
+            }
+        }
+
+       abstract class TreeIterator implements Iterator<T> {
+
+            @Override
+            public boolean hasNext() {
+                return (!nodeStack.isEmpty());
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        }
+
     }
 
     private Iterable<? extends T> preorderTraversal() {
         return new TreeTraversal() {
             {
-                nodeStack.push(root);
+                pushOntoStack(root);
             }
 
             @Override
@@ -280,13 +300,8 @@ public class AvlTree<T extends Comparable<? super T>> {
                     @Override
                     public T next() {
                         Node<T> nextNode = nodeStack.pop();
-
-                        // Push in opposite order (right, left) to pop in correct order (left, right)
-                        Node<T> right = nextNode.right();
-                        if (right != null) nodeStack.push(right);
-                        Node<T> left = nextNode.left();
-                        if (left != null) nodeStack.push(left);
-
+                        pushOntoStack(nextNode.right());
+                        pushOntoStack(nextNode.left());
                         return nextNode.data();
                     }
 
