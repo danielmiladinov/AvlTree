@@ -285,7 +285,6 @@ public class AvlTree<T extends Comparable<? super T>> {
         }
 
         abstract class TreeIterator implements Iterator<T> {
-
             @Override
             public boolean hasNext() {
                 return (!nodeStack.isEmpty());
@@ -306,23 +305,13 @@ public class AvlTree<T extends Comparable<? super T>> {
 
             @Override
             public Iterator<T> iterator() {
-                return new Iterator<T>() {
-                    @Override
-                    public boolean hasNext() {
-                        return !nodeStack.isEmpty();
-                    }
-
+                return new TreeIterator() {
                     @Override
                     public T next() {
                         Node<T> nextNode = nodeStack.pop();
                         pushOntoStack(nextNode.right());
                         pushOntoStack(nextNode.left());
                         return nextNode.data();
-                    }
-
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException();
                     }
                 };
             }
@@ -337,22 +326,12 @@ public class AvlTree<T extends Comparable<? super T>> {
 
             @Override
             public Iterator<T> iterator() {
-                return new Iterator<T>() {
-                    @Override
-                    public boolean hasNext() {
-                        return !nodeStack.isEmpty();
-                    }
-
+                return new TreeIterator() {
                     @Override
                     public T next() {
                         Node<T> nextNode = nodeStack.pop();
                         pushLeftMostNodesOf(nextNode.right());
                         return nextNode.data();
-                    }
-
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException();
                     }
                 };
             }
@@ -377,12 +356,7 @@ public class AvlTree<T extends Comparable<? super T>> {
 
             @Override
             public Iterator<T> iterator() {
-                return new Iterator<T>() {
-                    @Override
-                    public boolean hasNext() {
-                        return !nodeStack.isEmpty();
-                    }
-
+                return new TreeIterator() {
                     @Override
                     public T next() {
                         Node<T> next = null;
@@ -424,11 +398,6 @@ public class AvlTree<T extends Comparable<? super T>> {
                         iteratedNodes.put(next.data(), next);
                         return next;
                     }
-
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException();
-                    }
                 };
             }
         };
@@ -440,7 +409,7 @@ public class AvlTree<T extends Comparable<? super T>> {
 
             @Override
             public Iterator<T> iterator() {
-                return new Iterator<T>() {
+                return new TreeIterator() {
                     {
                         if (root != null) {
                             nodeQueue.offer(root);
@@ -466,14 +435,8 @@ public class AvlTree<T extends Comparable<? super T>> {
 
                         return nextNode.data();
                     }
-
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException();
-                    }
                 };
             }
         };
     }
-
 }
