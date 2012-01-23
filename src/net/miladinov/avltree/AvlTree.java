@@ -296,7 +296,6 @@ public class AvlTree<T extends Comparable<? super T>> {
                 throw new UnsupportedOperationException();
             }
         }
-
     }
 
     private Iterable<? extends T> preorderTraversal() {
