@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static junit.framework.Assert.assertEquals;
+
 public class RemoveRootTests {
     private AvlTree<Integer> tree;
 
@@ -25,5 +27,11 @@ public class RemoveRootTests {
         tree.add(1);
 
         tree.remove(3);
+
+        assertEquals(
+            " - 2 - 4\n" +
+            "     \\ 1\n",
+            TreePrinter.print(tree)
+        );
     }
 }

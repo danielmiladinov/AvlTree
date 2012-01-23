@@ -177,15 +177,16 @@ public class AvlTree<T extends Comparable<? super T>> {
                 }
             }
         } else {
-            left.rightMost().parent().setRight(null);
-            left.rightMost().setRight(current.right());
+            Node<T> newNode = current.right().leftMost();
+            newNode.leftMost().setLeft(left);
 
             if (parent == null) {
-                root = left.rightMost();
+                root = newNode;
+                root.setParent(null);
             } else if (parent.left() == current) {
-                parent.setLeft(left.rightMost());
+                parent.setLeft(newNode);
             } else if (parent.right() == current) {
-                parent.setRight(left.rightMost());
+                parent.setRight(newNode);
             }
         }
         size--;
