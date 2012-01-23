@@ -255,20 +255,36 @@ public class AvlTree<T extends Comparable<? super T>> {
         return levelOrderList;
     }
 
+    public T min() {
+        if (root == null) {
+            return null;
+        } else {
+            return root.leftMost().data();
+        }
+    }
+
+    public T max() {
+        if (root == null) {
+            return null;
+        } else {
+            return root.rightMost().data();
+        }
+    }
+
     abstract class TreeTraversal implements Iterable<T> {
         protected Stack<Node<T>> nodeStack;
 
         public TreeTraversal() {
             nodeStack = new Stack<Node<T>>();
         }
-        
+
         public void pushOntoStack(Node<T> node) {
             if (node != null) {
                 nodeStack.push(node);
             }
         }
 
-       abstract class TreeIterator implements Iterator<T> {
+        abstract class TreeIterator implements Iterator<T> {
 
             @Override
             public boolean hasNext() {
