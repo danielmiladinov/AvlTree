@@ -411,9 +411,7 @@ public class AvlTree<T extends Comparable<? super T>> {
             public Iterator<T> iterator() {
                 return new TreeIterator() {
                     {
-                        if (root != null) {
-                            nodeQueue.offer(root);
-                        }
+                        addToQueue(root);
                     }
 
                     @Override
@@ -424,18 +422,17 @@ public class AvlTree<T extends Comparable<? super T>> {
                     @Override
                     public T next() {
                         Node<T> nextNode = nodeQueue.poll();
-
-                        if (nextNode.left() != null) {
-                            nodeQueue.offer(nextNode.left());
-                        }
-
-                        if (nextNode.right() != null) {
-                            nodeQueue.offer(nextNode.right());
-                        }
-
+                        addToQueue(nextNode.left());
+                        addToQueue(nextNode.right());
                         return nextNode.data();
                     }
                 };
+            }
+
+            private void addToQueue(Node<T> node) {
+                if (node != null) {
+                    nodeQueue.offer(node);
+                }
             }
         };
     }
