@@ -25,7 +25,23 @@ public class RemoveRootTests {
 
         assertEquals(
             " - 2 - 4\n" +
-            "     \\ 1\n",
+                "     \\ 1\n",
+            TreePrinter.print(tree)
+        );
+    }
+
+    @Test
+    public void removingTheRootFromARightHeavyTreePromotesItsRightChildToBecomeTheNewRoot() {
+        tree.add(1);
+        tree.add(2);
+        tree.add(3);
+        tree.add(4);
+
+        tree.remove(2);
+
+        assertEquals(
+            " - 3 - 4\n" +
+                "     \\ 1\n",
             TreePrinter.print(tree)
         );
     }
@@ -58,15 +74,15 @@ public class RemoveRootTests {
             );
         }
     }
-    
+
     private void assertNominalSize(int expectedNominalSize, Integer rootValue) {
         assertSize("nominal", expectedNominalSize, nominalSize(), rootValue);
     }
-    
+
     private void assertEffectiveSize(int expectedEffectiveSize, Integer rootValue) {
         assertSize("effective", expectedEffectiveSize, effectiveSize(), rootValue);
     }
-    
+
     private void assertSize(String sizeName, int expectedSize, int actualSize, Integer rootValue) {
         assertEquals(
             String.format(
