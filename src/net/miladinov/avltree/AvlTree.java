@@ -63,7 +63,6 @@ public class AvlTree<T extends Comparable<? super T>> {
 
         int leftHeight = node.leftHeight();
         int rightHeight = node.rightHeight();
-
         boolean needsBalancing = Math.abs(leftHeight - rightHeight) > 1;
 
         if (needsBalancing) {
@@ -178,6 +177,7 @@ public class AvlTree<T extends Comparable<? super T>> {
             }
         } else {
             Node<T> newNode;
+
             if (current.rightHeight() > current.leftHeight()) {
                 newNode = right;
                 newNode.leftMost().setLeft(left);
@@ -205,7 +205,7 @@ public class AvlTree<T extends Comparable<? super T>> {
     public boolean isBalanced() {
         return root.isBalanced();
     }
-    
+
     public T rootValue() {
         return root.data();
     }
