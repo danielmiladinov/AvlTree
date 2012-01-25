@@ -177,8 +177,14 @@ public class AvlTree<T extends Comparable<? super T>> {
                 }
             }
         } else {
-            Node<T> newNode = current.right().leftMost();
-            newNode.leftMost().setLeft(left);
+            Node<T> newNode;
+            if (current.rightHeight() > current.leftHeight()) {
+                newNode = right;
+                newNode.leftMost().setLeft(left);
+            } else {
+                newNode = left;
+                newNode.rightMost().setRight(right);
+            }
 
             if (parent == null) {
                 root = newNode;
@@ -194,6 +200,14 @@ public class AvlTree<T extends Comparable<? super T>> {
 
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public boolean isBalanced() {
+        return root.isBalanced();
+    }
+    
+    public T rootValue() {
+        return root.data();
     }
 
     Node<T> root() {

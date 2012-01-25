@@ -117,6 +117,18 @@ class Node<T extends Comparable<? super T>> {
         }
     }
 
+    public boolean isBalanced() {
+        if (isLeaf()) {
+            return true;           
+        } else {
+            boolean leftIsBalanced = (left == null || left.isBalanced());
+            boolean rightIsBalanced = (right == null || right.isBalanced());
+            boolean currentIsBalanced = (Math.abs(rightHeight() - leftHeight()) <= 1);
+
+            return currentIsBalanced && leftIsBalanced && rightIsBalanced;
+        }
+    }
+
     public ChildNodeReplacement replace(Node<T> oldChild) {
         return new ChildNodeReplacement(oldChild);
     }
