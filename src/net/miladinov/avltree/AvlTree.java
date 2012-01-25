@@ -179,12 +179,13 @@ public class AvlTree<T extends Comparable<? super T>> {
             Node<T> newNode;
 
             if (current.rightHeight() > current.leftHeight()) {
-                newNode = right;
-                newNode.leftMost().setLeft(left);
+                newNode = detachMinimumSubNodeFrom(right);
             } else {
-                newNode = left;
-                newNode.rightMost().setRight(right);
+                newNode = detachMaximumSubNodeFrom(left);
             }
+
+            newNode.setLeft(left);
+            newNode.setRight(right);
 
             if (parent == null) {
                 root = newNode;
@@ -195,7 +196,32 @@ public class AvlTree<T extends Comparable<? super T>> {
                 parent.setRight(newNode);
             }
         }
+
         size--;
+    }
+
+    private Node<T> detachMaximumSubNodeFrom(Node<T> node) {
+        if (node.right() != null) {
+            return detachMaximumSubNodeFrom(node.right());
+        } else if (node.left() != null) {
+            node.parent().replace(node).with(node.left());
+            node.setLeft(null);
+        }
+        node.parent().setRight(null);
+        node.setParent(null);
+        return node;
+    }
+
+    private Node<T> detachMinimumSubNodeFrom(Node<T> node) {
+        if (node.left() != null) {
+            return detachMinimumSubNodeFrom(node.left());
+        } else if (node.right() != null) {
+            node.parent().replace(node).with(node.right());
+            node.setRight(null);
+        }
+        node.parent().setLeft(null);
+        node.setParent(null);
+        return node;
     }
 
     public boolean isEmpty() {

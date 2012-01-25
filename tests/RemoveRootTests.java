@@ -47,6 +47,39 @@ public class RemoveRootTests {
     }
 
     @Test
+    public void deletingTheRootFromANonTrivialTreeShouldNotCompletelyUnbalanceTheTree() {
+        tree.add(50);
+        tree.add(25);
+        tree.add(75);
+        tree.add(15);
+        tree.add(35);
+        tree.add(60);
+        tree.add(90);
+        tree.add(1);
+        tree.add(20);
+        tree.add(30);
+        tree.add(45);
+        tree.add(55);
+        tree.add(70);
+        tree.add(80);
+        tree.add(100);
+
+        tree.remove(50);
+
+        assertEquals(
+            " -  45 -  75 -  90 - 100\n" +
+            "                   \\  80\n" +
+            "             \\  60 -  70\n" +
+            "                   \\  55\n" +
+            "       \\  25 -  35\n" +
+            "                   \\  30\n" +
+            "             \\  15 -  20\n" +
+            "                   \\   1\n",
+            TreePrinter.print(tree)
+        );
+    }
+
+    @Test
     public void deletingFromLargerTreesShouldNotBeRisky() {
         for (int i = 1; i <= 1024; i++) {
             tree.add(i);
