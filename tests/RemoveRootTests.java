@@ -111,12 +111,6 @@ public class RemoveRootTests {
 
             assertNominalSize(expectedSize, rootValue);
             assertEffectiveSize(expectedSize, rootValue);
-
-            System.out.printf(
-                "Tree was %s after removing %d\n",
-                (tree.isBalanced() ? "balanced" : "unbalanced"),
-                rootValue
-            );
         }
     }
 
