@@ -226,6 +226,22 @@ public class AvlTree<T extends Comparable<? super T>> {
         return root.data();
     }
 
+    public T min() {
+        if (root == null) {
+            return null;
+        } else {
+            return root.leftMost().data();
+        }
+    }
+
+    public T max() {
+        if (root == null) {
+            return null;
+        } else {
+            return root.rightMost().data();
+        }
+    }
+
     Node<T> root() {
         return root;
     }
@@ -284,22 +300,6 @@ public class AvlTree<T extends Comparable<? super T>> {
             levelOrderList.add(data);
         }
         return levelOrderList;
-    }
-
-    public T min() {
-        if (root == null) {
-            return null;
-        } else {
-            return root.leftMost().data();
-        }
-    }
-
-    public T max() {
-        if (root == null) {
-            return null;
-        } else {
-            return root.rightMost().data();
-        }
     }
 
     abstract class TreeTraversal implements Iterable<T> {
