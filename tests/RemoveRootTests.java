@@ -100,7 +100,7 @@ public class RemoveRootTests {
         assertEquals("Tree was not at its expected effective size", expectedSize, effectiveSize());
 
         while (!tree.isEmpty()) {
-            Integer rootValue = tree.rootValue();
+            Integer rootValue = rootValue();
             tree.remove(rootValue);
             expectedSize--;
 
@@ -136,5 +136,9 @@ public class RemoveRootTests {
 
     private int effectiveSize() {
         return tree.asInorderList().size();
+    }
+
+    private Integer rootValue() {
+        return tree.asLevelOrderList().get(0);
     }
 }

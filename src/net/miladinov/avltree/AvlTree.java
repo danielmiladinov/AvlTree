@@ -218,10 +218,6 @@ public class AvlTree<T extends Comparable<? super T>> {
         return size == 0;
     }
 
-    public T rootValue() {
-        return root.data();
-    }
-
     public T min() {
         if (root == null) {
             return null;
