@@ -165,63 +165,53 @@ public class AvlTree<T extends Comparable<? super T>> {
             if (right == null) {
                 if (parent == null) {
                     root = left;
+                    root.setParent(null);
                 } else {
                     parent.replace(current).with(left);
                 }
             } else {
                 if (parent == null) {
                     root = right;
+                    root.setParent(null);
                 } else {
                     parent.replace(current).with(right);
                 }
             }
         } else {
-            Node<T> newNode;
+            T newData;
 
             if (current.rightHeight() > current.leftHeight()) {
-                newNode = detachMinimumSubNodeFrom(right);
+                newData = deleteMinimumSubNodeOf(right);
             } else {
-                newNode = detachMaximumSubNodeFrom(left);
+                newData = deleteMaximumSubNodeOf(left);
             }
 
-            newNode.setLeft(left);
-            newNode.setRight(right);
-
-            if (parent == null) {
-                root = newNode;
-                root.setParent(null);
-            } else if (parent.left() == current) {
-                parent.setLeft(newNode);
-            } else if (parent.right() == current) {
-                parent.setRight(newNode);
-            }
+            current.setData(newData);
         }
 
         size--;
     }
 
-    private Node<T> detachMaximumSubNodeFrom(Node<T> node) {
+    private T deleteMaximumSubNodeOf(Node<T> node) {
         if (node.right() != null) {
-            return detachMaximumSubNodeFrom(node.right());
+            return deleteMaximumSubNodeOf(node.right());
         } else if (node.left() != null) {
             node.parent().replace(node).with(node.left());
-            node.setLeft(null);
+        } else {
+            node.parent().replace(node).with(null);
         }
-        node.parent().setRight(null);
-        node.setParent(null);
-        return node;
+        return node.data();
     }
 
-    private Node<T> detachMinimumSubNodeFrom(Node<T> node) {
+    private T deleteMinimumSubNodeOf(Node<T> node) {
         if (node.left() != null) {
-            return detachMinimumSubNodeFrom(node.left());
+            return deleteMinimumSubNodeOf(node.left());
         } else if (node.right() != null) {
             node.parent().replace(node).with(node.right());
-            node.setRight(null);
+        } else {
+            node.parent().replace(node).with(null);
         }
-        node.parent().setLeft(null);
-        node.setParent(null);
-        return node;
+        return node.data();
     }
 
     public boolean isEmpty() {
@@ -229,7 +219,7 @@ public class AvlTree<T extends Comparable<? super T>> {
     }
 
     public boolean isBalanced() {
-        return root.isBalanced();
+        return isEmpty() || root.isBalanced();
     }
 
     public T rootValue() {

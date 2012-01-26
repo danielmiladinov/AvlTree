@@ -25,7 +25,7 @@ public class RemoveRootTests {
 
         assertEquals(
             " - 2 - 4\n" +
-                "     \\ 1\n",
+            "     \\ 1\n",
             TreePrinter.print(tree)
         );
     }
@@ -41,7 +41,7 @@ public class RemoveRootTests {
 
         assertEquals(
             " - 3 - 4\n" +
-                "     \\ 1\n",
+            "     \\ 1\n",
             TreePrinter.print(tree)
         );
     }
@@ -81,16 +81,28 @@ public class RemoveRootTests {
 
     @Test
     public void deletingFromLargerTreesShouldNotBeRisky() {
+        int expectedSize = 0;
         for (int i = 1; i <= 1024; i++) {
             tree.add(i);
+            expectedSize++;
+            assertEquals(
+                String.format("Tree was not at expected nominal size %d after adding %d", expectedSize, i),
+                expectedSize,
+                nominalSize()
+            );
+            assertEquals(
+                String.format("Tree was not at expected effective size %d after adding %d", expectedSize, i),
+                expectedSize,
+                effectiveSize()
+            );
             assertTrue(
                 String.format("Tree was not balanced after adding %d", i),
                 tree.isBalanced()
             );
         }
 
-        int expectedSize = 1024;
-        assertEquals("Tree was not at its expected size", expectedSize, tree.size());
+        assertEquals("Tree was not at its expected nominal size", expectedSize, nominalSize());
+        assertEquals("Tree was not at its expected effective size", expectedSize, effectiveSize());
 
         while (!tree.isEmpty()) {
             Integer rootValue = tree.rootValue();

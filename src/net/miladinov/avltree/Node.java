@@ -49,6 +49,10 @@ class Node<T extends Comparable<? super T>> {
         return data;
     }
 
+    public void setData(T data) {
+        this.data = data;
+    }
+
     public void setParent(Node<T> parent) {
         this.parent = parent;
 
@@ -119,7 +123,7 @@ class Node<T extends Comparable<? super T>> {
 
     public boolean isBalanced() {
         if (isLeaf()) {
-            return true;           
+            return true;
         } else {
             boolean leftIsBalanced = (left == null || left.isBalanced());
             boolean rightIsBalanced = (right == null || right.isBalanced());
