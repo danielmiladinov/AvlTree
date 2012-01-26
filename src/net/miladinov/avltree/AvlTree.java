@@ -218,10 +218,6 @@ public class AvlTree<T extends Comparable<? super T>> {
         return size == 0;
     }
 
-    public boolean isBalanced() {
-        return isEmpty() || root.isBalanced();
-    }
-
     public T rootValue() {
         return root.data();
     }

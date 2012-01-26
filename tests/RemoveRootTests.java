@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 public class RemoveRootTests {
     private AvlTree<Integer> tree;
@@ -94,10 +93,6 @@ public class RemoveRootTests {
                 String.format("Tree was not at expected effective size %d after adding %d", expectedSize, i),
                 expectedSize,
                 effectiveSize()
-            );
-            assertTrue(
-                String.format("Tree was not balanced after adding %d", i),
-                tree.isBalanced()
             );
         }
 
