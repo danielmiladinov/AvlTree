@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 public class RemoveRootTests {
     private AvlTree<Integer> tree;
@@ -25,7 +24,7 @@ public class RemoveRootTests {
 
         assertEquals(
             " - 2 - 4\n" +
-                "     \\ 1\n",
+            "     \\ 1\n",
             TreePrinter.print(tree)
         );
     }
@@ -41,37 +40,72 @@ public class RemoveRootTests {
 
         assertEquals(
             " - 3 - 4\n" +
-                "     \\ 1\n",
+            "     \\ 1\n",
+            TreePrinter.print(tree)
+        );
+    }
+
+    @Test
+    public void deletingTheRootFromANonTrivialTreeShouldNotCompletelyUnbalanceTheTree() {
+        tree.add(50);
+        tree.add(25);
+        tree.add(75);
+        tree.add(15);
+        tree.add(35);
+        tree.add(60);
+        tree.add(90);
+        tree.add(1);
+        tree.add(20);
+        tree.add(30);
+        tree.add(45);
+        tree.add(55);
+        tree.add(70);
+        tree.add(80);
+        tree.add(100);
+
+        tree.remove(50);
+
+        assertEquals(
+            " -  45 -  75 -  90 - 100\n" +
+            "                   \\  80\n" +
+            "             \\  60 -  70\n" +
+            "                   \\  55\n" +
+            "       \\  25 -  35\n" +
+            "                   \\  30\n" +
+            "             \\  15 -  20\n" +
+            "                   \\   1\n",
             TreePrinter.print(tree)
         );
     }
 
     @Test
     public void deletingFromLargerTreesShouldNotBeRisky() {
+        int expectedSize = 0;
         for (int i = 1; i <= 1024; i++) {
             tree.add(i);
-            assertTrue(
-                String.format("Tree was not balanced after adding %d", i),
-                tree.isBalanced()
+            expectedSize++;
+            assertEquals(
+                String.format("Tree was not at expected nominal size %d after adding %d", expectedSize, i),
+                expectedSize,
+                nominalSize()
+            );
+            assertEquals(
+                String.format("Tree was not at expected effective size %d after adding %d", expectedSize, i),
+                expectedSize,
+                effectiveSize()
             );
         }
 
-        int expectedSize = 1024;
-        assertEquals("Tree was not at its expected size", expectedSize, tree.size());
+        assertEquals("Tree was not at its expected nominal size", expectedSize, nominalSize());
+        assertEquals("Tree was not at its expected effective size", expectedSize, effectiveSize());
 
         while (!tree.isEmpty()) {
-            Integer rootValue = tree.rootValue();
+            Integer rootValue = rootValue();
             tree.remove(rootValue);
             expectedSize--;
 
             assertNominalSize(expectedSize, rootValue);
             assertEffectiveSize(expectedSize, rootValue);
-
-            System.out.printf(
-                "Tree was %s after removing %d\n",
-                (tree.isBalanced() ? "balanced" : "unbalanced"),
-                rootValue
-            );
         }
     }
 
@@ -102,5 +136,9 @@ public class RemoveRootTests {
 
     private int effectiveSize() {
         return tree.asInorderList().size();
+    }
+
+    private Integer rootValue() {
+        return tree.asLevelOrderList().get(0);
     }
 }

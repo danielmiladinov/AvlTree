@@ -165,49 +165,73 @@ public class AvlTree<T extends Comparable<? super T>> {
             if (right == null) {
                 if (parent == null) {
                     root = left;
+                    root.setParent(null);
                 } else {
                     parent.replace(current).with(left);
                 }
             } else {
                 if (parent == null) {
                     root = right;
+                    root.setParent(null);
                 } else {
                     parent.replace(current).with(right);
                 }
             }
         } else {
-            Node<T> newNode;
+            T newData;
 
             if (current.rightHeight() > current.leftHeight()) {
-                newNode = right;
-                newNode.leftMost().setLeft(left);
+                newData = deleteMinimumSubNodeOf(right);
             } else {
-                newNode = left;
-                newNode.rightMost().setRight(right);
+                newData = deleteMaximumSubNodeOf(left);
             }
 
-            if (parent == null) {
-                root = newNode;
-                root.setParent(null);
-            } else if (parent.left() == current) {
-                parent.setLeft(newNode);
-            } else if (parent.right() == current) {
-                parent.setRight(newNode);
-            }
+            current.setData(newData);
         }
+
         size--;
+    }
+
+    private T deleteMaximumSubNodeOf(Node<T> node) {
+        if (node.right() != null) {
+            return deleteMaximumSubNodeOf(node.right());
+        } else if (node.left() != null) {
+            node.parent().replace(node).with(node.left());
+        } else {
+            node.parent().replace(node).with(null);
+        }
+        return node.data();
+    }
+
+    private T deleteMinimumSubNodeOf(Node<T> node) {
+        if (node.left() != null) {
+            return deleteMinimumSubNodeOf(node.left());
+        } else if (node.right() != null) {
+            node.parent().replace(node).with(node.right());
+        } else {
+            node.parent().replace(node).with(null);
+        }
+        return node.data();
     }
 
     public boolean isEmpty() {
         return size == 0;
     }
 
-    public boolean isBalanced() {
-        return root.isBalanced();
+    public T min() {
+        if (root == null) {
+            return null;
+        } else {
+            return root.leftMost().data();
+        }
     }
 
-    public T rootValue() {
-        return root.data();
+    public T max() {
+        if (root == null) {
+            return null;
+        } else {
+            return root.rightMost().data();
+        }
     }
 
     Node<T> root() {
@@ -268,22 +292,6 @@ public class AvlTree<T extends Comparable<? super T>> {
             levelOrderList.add(data);
         }
         return levelOrderList;
-    }
-
-    public T min() {
-        if (root == null) {
-            return null;
-        } else {
-            return root.leftMost().data();
-        }
-    }
-
-    public T max() {
-        if (root == null) {
-            return null;
-        } else {
-            return root.rightMost().data();
-        }
     }
 
     abstract class TreeTraversal implements Iterable<T> {
