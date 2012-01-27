@@ -4,7 +4,7 @@ import net.miladinov.util.Stack;
 
 import java.util.*;
 
-public class AvlTree<T extends Comparable<? super T>> {
+public class AvlTree<T extends Comparable<? super T>> implements Collection<T> {
     private Node<T> root;
     private int size = 0;
 
@@ -12,10 +12,12 @@ public class AvlTree<T extends Comparable<? super T>> {
         size = 0;
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public boolean add(T data) {
         if (isEmpty()) {
             root = new Node<T>(data);
@@ -214,6 +216,7 @@ public class AvlTree<T extends Comparable<? super T>> {
         return node.data();
     }
 
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }
@@ -260,6 +263,56 @@ public class AvlTree<T extends Comparable<? super T>> {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Object[] toArray() {
+        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public <T> T[] toArray(T[] a) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends T> c) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void clear() {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public List<T> asPreorderList() {
