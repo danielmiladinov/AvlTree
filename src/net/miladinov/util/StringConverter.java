@@ -2,6 +2,11 @@ package net.miladinov.util;
 
 public class StringConverter {
 
+    public static String callingMethodNameAsSentence() {
+        final StackTraceElement callingMethodStackFrame = Thread.currentThread().getStackTrace()[3];
+        return camelCaseToSentence(callingMethodStackFrame.getMethodName());
+    }
+
     public static String currentMethodNameAsSentence() {
         final StackTraceElement callingMethodStackFrame = Thread.currentThread().getStackTrace()[2];
         return camelCaseToSentence(callingMethodStackFrame.getMethodName());
