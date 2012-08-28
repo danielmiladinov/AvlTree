@@ -266,53 +266,93 @@ public class AvlTree<T extends Comparable<? super T>> implements Collection<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean contains(Object o) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return contains((T) o);
     }
 
     @Override
     public Iterator<T> iterator() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return asInorderList().iterator();
     }
 
     @Override
     public Object[] toArray() {
-        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return asInorderList().toArray();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T[] toArray(T[] a) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if (a.length < size) {
+            return (T[]) Arrays.copyOf(toArray(), size, a.getClass());
+        }
+        System.arraycopy(toArray(), 0, a, 0, size);
+
+        if (a.length > size) {
+            a[size] = null;
+        }
+
+        return a;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean remove(Object o) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return remove((T) o);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean containsAll(Collection<?> c) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        for (Object data : c) {
+            if (!contains(data)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
     public boolean addAll(Collection<? extends T> c) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        boolean modified = false;
+
+        for (T item : c) {
+            modified = add(item) || modified;
+        }
+
+        return modified;
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        boolean modified = false;
+
+        for (Object data : c) {
+            modified = remove(data) || modified;
+        }
+
+        return modified;
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        boolean modified = false;
+
+        for (T data : this) {
+            if (!c.contains(data)) {
+                modified = remove(data) || modified;
+            }
+        }
+
+        return modified;
     }
 
     @Override
     public void clear() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        for (T data : postorderTraversal()) {
+            remove(data);
+        }
     }
 
     public List<T> asPreorderList() {
